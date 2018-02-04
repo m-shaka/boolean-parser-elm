@@ -45,9 +45,9 @@ descriptions =
             String.split "\n" s |> List.map String.trim |> String.join "" |> text
     in
         [ """
-          論理演算をするだけのパーサー。Elmで実装。True, Falseはそれぞれ'T', 'F'、否定は'not'、
-          積と和はそれぞれ'&&', '||'に対応している。
-          括弧付きの表記にも対応している。
+          論理演算をするだけのパーサー。True, Falseはそれぞれ\\(T\\), \\(F\\)、否定は\\(not\\)、
+          積と和はそれぞれ\\(\\&\\&\\), \\(||\\)に対応している。
+          括弧付きの表記も使える。
           """
         ]
             |> List.map convert
