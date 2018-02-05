@@ -9198,22 +9198,19 @@ var _user$project$BooleanParser$term = function () {
 	var bracket = A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		A2(
-			_elm_tools$parser$Parser_ops['|.'],
+			_elm_tools$parser$Parser_ops['|='],
 			A2(
-				_elm_tools$parser$Parser_ops['|='],
+				_elm_tools$parser$Parser_ops['|.'],
 				A2(
 					_elm_tools$parser$Parser_ops['|.'],
-					A2(
-						_elm_tools$parser$Parser_ops['|.'],
-						_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-						_elm_tools$parser$Parser$symbol('(')),
-					_user$project$BooleanParser$spaces),
-				_elm_tools$parser$Parser$lazy(
-					function (_p1) {
-						return _user$project$BooleanParser$term;
-					})),
-			_user$project$BooleanParser$spaces),
-		_elm_tools$parser$Parser$symbol(')'));
+					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+					_elm_tools$parser$Parser$symbol('(')),
+				_user$project$BooleanParser$spaces),
+			_elm_tools$parser$Parser$lazy(
+				function (_p1) {
+					return _user$project$BooleanParser$term;
+				})),
+		_user$project$BooleanParser$spaces);
 	var $false = A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$F),
@@ -9293,8 +9290,15 @@ var _user$project$BooleanParser$term = function () {
 							_0: A2(
 								_elm_tools$parser$Parser_ops['|.'],
 								_elm_tools$parser$Parser$succeed(t),
-								_user$project$BooleanParser$spaces),
-							_1: {ctor: '[]'}
+								_elm_tools$parser$Parser$symbol(')')),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_tools$parser$Parser_ops['|.'],
+									_elm_tools$parser$Parser$succeed(t),
+									_elm_tools$parser$Parser$end),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				});

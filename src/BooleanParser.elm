@@ -26,7 +26,6 @@ term =
                 |. spaces
                 |= lazy (\_ -> term)
                 |. spaces
-                |. symbol ")"
 
         not_ =
             succeed Not
@@ -51,7 +50,9 @@ term =
                             |. spaces
                             |= lazy (\_ -> term)
                         , succeed t
-                            |. spaces
+                            |. symbol ")"
+                        , succeed t
+                            |. end
                         ]
                 )
 
