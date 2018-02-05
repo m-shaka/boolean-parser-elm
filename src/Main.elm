@@ -84,4 +84,8 @@ view model =
             , p [] descriptions
             , h4 [] [ text "examples" ]
             , examples
+            , p []
+                [ a [ href "https://github.com/m-shaka/boolean-parser-elm", target "_blank" ]
+                    [ text "ソースはこちら" ]
+                ]
             ]
