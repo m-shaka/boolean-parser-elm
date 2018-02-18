@@ -9194,150 +9194,160 @@ var _user$project$BooleanParser$Not = function (a) {
 };
 var _user$project$BooleanParser$F = {ctor: 'F'};
 var _user$project$BooleanParser$T = {ctor: 'T'};
-var _user$project$BooleanParser$term = function () {
-	var bracket = A2(
+var _user$project$BooleanParser$base = _elm_tools$parser$Parser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$T),
+			_elm_tools$parser$Parser$keyword('T')),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$F),
+				_elm_tools$parser$Parser$keyword('F')),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_tools$parser$Parser_ops['|='],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$Not),
+						_elm_tools$parser$Parser$keyword('!')),
+					_elm_tools$parser$Parser$lazy(
+						function (_p1) {
+							return _user$project$BooleanParser$factor;
+						})),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$BooleanParser$factor = _elm_tools$parser$Parser$oneOf(
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_tools$parser$Parser_ops['|.'],
+			A2(
+				_elm_tools$parser$Parser_ops['|.'],
+				A2(
+					_elm_tools$parser$Parser_ops['|='],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						A2(
+							_elm_tools$parser$Parser_ops['|.'],
+							_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+							_elm_tools$parser$Parser$symbol('(')),
+						_user$project$BooleanParser$spaces),
+					_elm_tools$parser$Parser$lazy(
+						function (_p2) {
+							return _user$project$BooleanParser$additiveExpr;
+						})),
+				_user$project$BooleanParser$spaces),
+			_elm_tools$parser$Parser$symbol(')')),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_tools$parser$Parser_ops['|='],
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+				_user$project$BooleanParser$base),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$BooleanParser$additiveExpr = A2(
+	_elm_tools$parser$Parser$andThen,
+	function (t) {
+		return _elm_tools$parser$Parser$oneOf(
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_tools$parser$Parser_ops['|='],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						A2(
+							_elm_tools$parser$Parser_ops['|.'],
+							_elm_tools$parser$Parser$succeed(
+								_user$project$BooleanParser$Or(t)),
+							_elm_tools$parser$Parser$symbol('||')),
+						_user$project$BooleanParser$spaces),
+					_elm_tools$parser$Parser$lazy(
+						function (_p3) {
+							return _user$project$BooleanParser$additiveExpr;
+						})),
+				_1: {
+					ctor: '::',
+					_0: _elm_tools$parser$Parser$succeed(t),
+					_1: {ctor: '[]'}
+				}
+			});
+	},
+	A2(
+		_elm_tools$parser$Parser_ops['|.'],
+		A2(
+			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+			_elm_tools$parser$Parser$lazy(
+				function (_p4) {
+					return _user$project$BooleanParser$multiplicativeExpr;
+				})),
+		_user$project$BooleanParser$spaces));
+var _user$project$BooleanParser$multiplicativeExpr = A2(
+	_elm_tools$parser$Parser$andThen,
+	function (t) {
+		return _elm_tools$parser$Parser$oneOf(
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_tools$parser$Parser_ops['|='],
+					A2(
+						_elm_tools$parser$Parser_ops['|.'],
+						A2(
+							_elm_tools$parser$Parser_ops['|.'],
+							_elm_tools$parser$Parser$succeed(
+								_user$project$BooleanParser$And(t)),
+							_elm_tools$parser$Parser$symbol('&&')),
+						_user$project$BooleanParser$spaces),
+					_elm_tools$parser$Parser$lazy(
+						function (_p5) {
+							return _user$project$BooleanParser$multiplicativeExpr;
+						})),
+				_1: {
+					ctor: '::',
+					_0: _elm_tools$parser$Parser$succeed(t),
+					_1: {ctor: '[]'}
+				}
+			});
+	},
+	A2(
+		_elm_tools$parser$Parser_ops['|.'],
+		A2(
+			_elm_tools$parser$Parser_ops['|='],
+			_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
+			_elm_tools$parser$Parser$lazy(
+				function (_p6) {
+					return _user$project$BooleanParser$factor;
+				})),
+		_user$project$BooleanParser$spaces));
+var _user$project$BooleanParser$expr = A2(
+	_elm_tools$parser$Parser_ops['|.'],
+	A2(
 		_elm_tools$parser$Parser_ops['|.'],
 		A2(
 			_elm_tools$parser$Parser_ops['|='],
 			A2(
 				_elm_tools$parser$Parser_ops['|.'],
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
-					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-					_elm_tools$parser$Parser$symbol('(')),
+				_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
 				_user$project$BooleanParser$spaces),
-			_elm_tools$parser$Parser$lazy(
-				function (_p1) {
-					return _user$project$BooleanParser$term;
-				})),
-		_user$project$BooleanParser$spaces);
-	var $false = A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$F),
-		_elm_tools$parser$Parser$keyword('F'));
-	var $true = A2(
-		_elm_tools$parser$Parser_ops['|.'],
-		_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$T),
-		_elm_tools$parser$Parser$keyword('T'));
-	var not_ = A2(
-		_elm_tools$parser$Parser_ops['|='],
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|.'],
-				_elm_tools$parser$Parser$succeed(_user$project$BooleanParser$Not),
-				_elm_tools$parser$Parser$keyword('not')),
-			_user$project$BooleanParser$spaces),
-		_elm_tools$parser$Parser$oneOf(
-			{
-				ctor: '::',
-				_0: $true,
-				_1: {
-					ctor: '::',
-					_0: $false,
-					_1: {
-						ctor: '::',
-						_0: _elm_tools$parser$Parser$lazy(
-							function (_p2) {
-								return not_;
-							}),
-						_1: {
-							ctor: '::',
-							_0: bracket,
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}));
-	return A2(
-		_elm_tools$parser$Parser$andThen,
-		function (t) {
-			return _elm_tools$parser$Parser$oneOf(
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_tools$parser$Parser_ops['|='],
-						A2(
-							_elm_tools$parser$Parser_ops['|.'],
-							A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								_elm_tools$parser$Parser$succeed(
-									_user$project$BooleanParser$And(t)),
-								_elm_tools$parser$Parser$symbol('&&')),
-							_user$project$BooleanParser$spaces),
-						_elm_tools$parser$Parser$lazy(
-							function (_p3) {
-								return _user$project$BooleanParser$term;
-							})),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_tools$parser$Parser_ops['|='],
-							A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								A2(
-									_elm_tools$parser$Parser_ops['|.'],
-									_elm_tools$parser$Parser$succeed(
-										_user$project$BooleanParser$Or(t)),
-									_elm_tools$parser$Parser$symbol('||')),
-								_user$project$BooleanParser$spaces),
-							_elm_tools$parser$Parser$lazy(
-								function (_p4) {
-									return _user$project$BooleanParser$term;
-								})),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_tools$parser$Parser_ops['|.'],
-								_elm_tools$parser$Parser$succeed(t),
-								_elm_tools$parser$Parser$symbol(')')),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_tools$parser$Parser_ops['|.'],
-									_elm_tools$parser$Parser$succeed(t),
-									_elm_tools$parser$Parser$end),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				});
-		},
-		A2(
-			_elm_tools$parser$Parser_ops['|.'],
-			A2(
-				_elm_tools$parser$Parser_ops['|='],
-				A2(
-					_elm_tools$parser$Parser_ops['|.'],
-					_elm_tools$parser$Parser$succeed(_elm_lang$core$Basics$identity),
-					_user$project$BooleanParser$spaces),
-				_elm_tools$parser$Parser$oneOf(
-					{
-						ctor: '::',
-						_0: bracket,
-						_1: {
-							ctor: '::',
-							_0: $true,
-							_1: {
-								ctor: '::',
-								_0: $false,
-								_1: {
-									ctor: '::',
-									_0: not_,
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					})),
-			_user$project$BooleanParser$spaces));
-}();
+			_user$project$BooleanParser$additiveExpr),
+		_user$project$BooleanParser$spaces),
+	_elm_tools$parser$Parser$end);
 var _user$project$BooleanParser$parseString = function (s) {
-	return A2(_elm_tools$parser$Parser$run, _user$project$BooleanParser$term, s);
+	return A2(_elm_tools$parser$Parser$run, _user$project$BooleanParser$expr, s);
 };
 var _user$project$BooleanParser$evalString = function (s) {
-	var _p5 = _user$project$BooleanParser$parseString(s);
-	if (_p5.ctor === 'Ok') {
-		return _user$project$BooleanParser$evalTerm(_p5._0) ? 'True' : 'False';
+	var _p7 = _user$project$BooleanParser$parseString(s);
+	if (_p7.ctor === 'Ok') {
+		return _user$project$BooleanParser$evalTerm(_p7._0) ? 'True' : 'False';
 	} else {
 		return 'Parse Error';
 	}
@@ -9353,7 +9363,7 @@ var _user$project$Main$examples = A2(
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html$text('not T \\(\\rightarrow \\neg{True} \\Rightarrow False\\)'),
+				_0: _elm_lang$html$Html$text('!T \\(\\rightarrow \\neg{True} \\Rightarrow False\\)'),
 				_1: {ctor: '[]'}
 			}),
 		_1: {
@@ -9373,7 +9383,7 @@ var _user$project$Main$examples = A2(
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('not (T || F) && T \\(\\rightarrow \\neg{(True \\lor False)} \\land True \\Rightarrow False \\)'),
+						_0: _elm_lang$html$Html$text('!(T || F) && T \\(\\rightarrow \\neg{(True \\lor False)} \\land True \\Rightarrow False \\)'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
@@ -9396,7 +9406,7 @@ var _user$project$Main$descriptions = function () {
 		convert,
 		{
 			ctor: '::',
-			_0: '\n          論理演算をするだけのパーサー。True, Falseはそれぞれ\\(T\\), \\(F\\)、否定は\\(not\\)、\n          積と和はそれぞれ\\(\\&\\&\\), \\(||\\)に対応している。\n          括弧付きの表記も使える。\n          ',
+			_0: '\n          論理演算をするだけのパーサー。True, Falseはそれぞれ\\(T\\), \\(F\\)、否定は\\(!\\)、\n          積と和はそれぞれ\\(\\&\\&\\), \\(||\\)に対応している。\n          括弧付きの表記も使える。\n          ',
 			_1: {ctor: '[]'}
 		});
 }();
@@ -9478,7 +9488,11 @@ var _user$project$Main$view = function (model) {
 									_1: {
 										ctor: '::',
 										_0: inputStyle,
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$autofocus(true),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}

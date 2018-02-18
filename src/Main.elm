@@ -45,7 +45,7 @@ descriptions =
             String.split "\n" s |> List.map String.trim |> String.join "" |> text
     in
         [ """
-          論理演算をするだけのパーサー。True, Falseはそれぞれ\\(T\\), \\(F\\)、否定は\\(not\\)、
+          論理演算をするだけのパーサー。True, Falseはそれぞれ\\(T\\), \\(F\\)、否定は\\(!\\)、
           積と和はそれぞれ\\(\\&\\&\\), \\(||\\)に対応している。
           括弧付きの表記も使える。
           """
@@ -55,9 +55,9 @@ descriptions =
 
 examples =
     ul []
-        [ li [] [ text "not T \\(\\rightarrow \\neg{True} \\Rightarrow False\\)" ]
+        [ li [] [ text "!T \\(\\rightarrow \\neg{True} \\Rightarrow False\\)" ]
         , li [] [ text "T && T \\(\\rightarrow True \\land True \\Rightarrow True \\)" ]
-        , li [] [ text "not (T || F) && T \\(\\rightarrow \\neg{(True \\lor False)} \\land True \\Rightarrow False \\)" ]
+        , li [] [ text "!(T || F) && T \\(\\rightarrow \\neg{(True \\lor False)} \\land True \\Rightarrow False \\)" ]
         ]
 
 
@@ -77,7 +77,7 @@ view model =
                 ]
             ]
             [ Html.form [ onSubmit Submit ]
-                [ input [ onInput Change_input, type_ "text", value model.input_, inputStyle ] []
+                [ input [ onInput Change_input, type_ "text", value model.input_, inputStyle, autofocus True ] []
                 , button [ type_ "submit", buttonStyle ] [ text "評価" ]
                 , text model.result
                 ]

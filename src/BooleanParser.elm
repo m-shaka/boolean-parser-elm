@@ -11,50 +11,72 @@ type Term
     | Or Term Term
 
 
-term : Parser Term
-term =
-    let
-        true =
-            succeed T |. keyword "T"
+base : Parser Term
+base =
+    oneOf
+        [ succeed T |. keyword "T"
+        , succeed F |. keyword "F"
+        , succeed Not
+            |. keyword "!"
+            |= lazy (\_ -> factor)
+        ]
 
-        false =
-            succeed F |. keyword "F"
 
-        bracket =
-            succeed identity
-                |. symbol "("
-                |. spaces
-                |= lazy (\_ -> term)
-                |. spaces
-
-        not_ =
-            succeed Not
-                |. keyword "not"
-                |. spaces
-                |= oneOf [ true, false, lazy (\_ -> not_), bracket ]
-    in
-        succeed identity
+factor : Parser Term
+factor =
+    oneOf
+        [ succeed identity
+            |. symbol "("
             |. spaces
-            |= oneOf
-                [ bracket, true, false, not_ ]
+            |= lazy (\_ -> additiveExpr)
             |. spaces
-            |> andThen
-                (\t ->
-                    oneOf
-                        [ succeed (And t)
-                            |. symbol "&&"
-                            |. spaces
-                            |= lazy (\_ -> term)
-                        , succeed (Or t)
-                            |. symbol "||"
-                            |. spaces
-                            |= lazy (\_ -> term)
-                        , succeed t
-                            |. symbol ")"
-                        , succeed t
-                            |. end
-                        ]
-                )
+            |. symbol ")"
+        , succeed identity
+            |= base
+        ]
+
+
+multiplicativeExpr : Parser Term
+multiplicativeExpr =
+    succeed identity
+        |= lazy (\_ -> factor)
+        |. spaces
+        |> andThen
+            (\t ->
+                oneOf
+                    [ succeed (And t)
+                        |. symbol "&&"
+                        |. spaces
+                        |= lazy (\_ -> multiplicativeExpr)
+                    , succeed t
+                    ]
+            )
+
+
+additiveExpr : Parser Term
+additiveExpr =
+    succeed identity
+        |= lazy (\_ -> multiplicativeExpr)
+        |. spaces
+        |> andThen
+            (\t ->
+                oneOf
+                    [ succeed (Or t)
+                        |. symbol "||"
+                        |. spaces
+                        |= lazy (\_ -> additiveExpr)
+                    , succeed t
+                    ]
+            )
+
+
+expr : Parser Term
+expr =
+    succeed identity
+        |. spaces
+        |= additiveExpr
+        |. spaces
+        |. end
 
 
 spaces : Parser ()
@@ -64,7 +86,7 @@ spaces =
 
 parseString : String -> Result Error Term
 parseString s =
-    run term s
+    run expr s
 
 
 evalTerm : Term -> Bool
